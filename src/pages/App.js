@@ -1,15 +1,25 @@
-import logo from "./logo.svg";
-import "./App.css";
+import "../App.css";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Card from "./PokemonCard";
+import PokemonCard from "../PokemonCard";
+
 import InputBase from "@mui/material/InputBase";
-import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
-
 import MuiToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Button from "@mui/material/Button";
+
+import { Link } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+
+import { connect } from "react-redux";
+
+import {
+  fetchPokemonDataSuccess,
+  fetchPokemonDataFailure,
+} from "../Redux/actions";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,32 +66,73 @@ const ToggleButton = styled(MuiToggleButton)({
   },
 });
 
-function App() {
-  const [pokemonData, setPokemonData] = useState([]);
+const mapStateToProps = (state) => {
+  return {
+    pokemonData: state.pokemon,
+    // loading: state.loading,
+  };
+};
+
+const App = connect(mapStateToProps)(ConnectedApp);
+
+function ConnectedApp({ pokemonData }) {
+  // const [pokemonData, setPokemonData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/");
 
   const [searchInput, setSearchInput] = useState("");
 
-  const pokeFun = async () => {
-    setLoading(true);
-    const res = await axios.get(url);
-    getPokemon(res.data.results);
-    setLoading(false);
-  };
+  const dispatch = useDispatch();
+
+  // const getPokemon = async (res) => {
+  //   if (res) {
+  //     console.log(res);
+  //     res.map(async (item) => {
+  //       const result = await axios.get(item.url);
+  //       setPokemonData((state) => {
+  //         state = [...state, result.data];
+  //         state.sort((a, b) => (a.id > b.id ? 1 : -1));
+  //         return state;
+  //       });
+  //     });
+  //   }
+  // };
+  //надо вызвать функцию promise all
+  // const promisesList = urlsList.map(() => код, который делает http-запрос к каждому урлу)
+
+  // const pokeFun = async () => {
+  //   setLoading(true);
+  //   const res = await axios.get(url);
+  //   getPokemon(res.data.results);
+
+  //   setLoading(false);
+  // };
 
   const getPokemon = async (res) => {
     if (res) {
       console.log(res);
-      res.map(async (item) => {
-        const result = await axios.get(item.url);
-        setPokemonData((state) => {
-          state = [...state, result.data];
-          state.sort((a, b) => (a.id > b.id ? 1 : -1));
-          return state;
+      try {
+        const promises = res.map(async (item) => {
+          const result = await axios.get(item.url);
+          return result.data;
         });
-      });
+        const pokemon = await Promise.all(promises);
+        dispatch(fetchPokemonDataSuccess(pokemon));
+      } catch (error) {
+        dispatch(fetchPokemonDataFailure(error.message));
+      }
     }
+  };
+
+  const pokeFun = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(url);
+      getPokemon(res.data.results);
+    } catch (error) {
+      dispatch(fetchPokemonDataFailure(error.message));
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -98,6 +149,9 @@ function App() {
     <div>
       <div className="header">
         <h1>POKEDEX</h1>
+        <Link to="/favorites">
+          <Button variant="outlined">Favorites⭐</Button>
+        </Link>
         <div className="searchSection">
           <div>
             <Search>
@@ -141,12 +195,12 @@ function App() {
         </div>
       </div>
       <div>
-        <Card
+        <PokemonCard
           selectedTag={selectedTag}
           searchInput={searchInput}
           pokemon={pokemonData}
           loading={loading}
-        ></Card>
+        ></PokemonCard>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ const style = {
   textAlign: "center",
 };
 
-const PokemonCard = ({ searchInput, loading, selectedTag, pokemon }) => {
+const FavoritePokemonCard = ({ searchInput, selectedTag, pokemon }) => {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
@@ -56,8 +56,6 @@ const PokemonCard = ({ searchInput, loading, selectedTag, pokemon }) => {
     }
   };
 
-  const [filteredPokemon, setFilteredPokemon] = useState([]);
-
   const filterFunctions = {
     grass: (pokemon) => pokemon.types[0].type.name === "grass",
     fire: (pokemon) => pokemon.types[0].type.name === "fire",
@@ -67,25 +65,6 @@ const PokemonCard = ({ searchInput, loading, selectedTag, pokemon }) => {
   };
   const favorites = useSelector((state) => state.favorites);
 
-  useEffect(() => {
-    let filteredData = pokemon;
-    if (pokemon && Array.isArray(pokemon)) {
-      filteredData = pokemon;
-    }
-    if (selectedTag && filterFunctions[selectedTag]) {
-      filteredData = filteredData.filter(filterFunctions[selectedTag]);
-    }
-    if (searchInput !== "") {
-      filteredData = filteredData.filter((item) =>
-        item.name.toLowerCase().includes(searchInput.toLowerCase())
-      );
-    }
-    setFilteredPokemon(filteredData);
-  }, [selectedTag, searchInput, pokemon]);
-
-  // const handleAddFavorite = (itemId) => {
-  //   dispatch(toggleFavorite(itemId));
-  // };
   const handleAddFavorite = (item) => {
     dispatch(toggleFavorite(item));
   };
@@ -109,52 +88,45 @@ const PokemonCard = ({ searchInput, loading, selectedTag, pokemon }) => {
       </Modal>
 
       <div className="card-row">
-        {loading ? (
-          <h1>Loading...</h1>
+        {favorites.length > 0 ? (
+          favorites.map((pokemon) => (
+            <div
+              className="card"
+              key={pokemon.id}
+              onClick={() => openPokeInfo(pokemon)}
+            >
+              <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleAddFavorite(pokemon);
+                }}
+              >
+                ⭐
+              </button>
+
+              <h2 key={`title-${pokemon.id}`}>{pokemon.id}</h2>
+              <img
+                key={`image-${pokemon.id}`}
+                src={pokemon.sprites && pokemon.sprites.front_default}
+                alt=""
+              />
+              <h2>{pokemon.name}</h2>
+              <h2>
+                Type:&nbsp;
+                {pokemon.types && pokemon.types.length > 0 && (
+                  <span style={{ color: getColorForTags(pokemon) }}>
+                    {pokemon.types[0].type.name}
+                  </span>
+                )}
+              </h2>
+            </div>
+          ))
         ) : (
-          filteredPokemon.map((item) => {
-            // const isFavorite = favorites.includes(item);
-            const isFavorite = favorites.some((f) => f.id === item.id);
-
-            return (
-              <>
-                <div
-                  className="card"
-                  key={item.id}
-                  onClick={() => openPokeInfo(item)}
-                >
-                  <button
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleAddFavorite(item);
-                    }}
-                  >
-                    {isFavorite ? "⭐" : "✩"}
-                  </button>
-
-                  <h2 key={`title-${item.id}`}>{item.id}</h2>
-                  <img
-                    key={`image-${item.id}`}
-                    src={item.sprites && item.sprites.front_default}
-                    alt=""
-                  />
-                  <h2>{item.name}</h2>
-                  <h2>
-                    Type:&nbsp;
-                    {item.types && item.types.length > 0 && (
-                      <span style={{ color: getColorForTags(item) }}>
-                        {item.types[0].type.name}
-                      </span>
-                    )}
-                  </h2>
-                </div>
-              </>
-            );
-          })
+          <p>No favorite Pokemon yet.</p>
         )}
       </div>
     </>
   );
 };
 
-export default PokemonCard;
+export default FavoritePokemonCard;
