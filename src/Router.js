@@ -1,5 +1,5 @@
-import App from "./pages/App";
-import Favorites from "./pages/Favorites";
+import App from "./PagesComponents/App";
+import Favorites from "./PagesComponents/Favorites";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 export default function Router() {

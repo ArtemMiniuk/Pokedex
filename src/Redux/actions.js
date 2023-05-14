@@ -1,10 +1,3 @@
-// export const toggleFavorite = (itemId) => {
-//   return {
-//     type: "TOGGLE_FAVORITE",
-//     payload: itemId,
-//   };
-// };
-
 export const toggleFavorite = (item) => {
   return {
     type: "TOGGLE_FAVORITE",

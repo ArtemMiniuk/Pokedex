@@ -1,7 +1,7 @@
 import "../App.css";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import PokemonCard from "../PokemonCard";
+import PokemonCard from "../PokemonsCardsComponents/PokemonCard";
 
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -76,37 +76,12 @@ const mapStateToProps = (state) => {
 const App = connect(mapStateToProps)(ConnectedApp);
 
 function ConnectedApp({ pokemonData }) {
-  // const [pokemonData, setPokemonData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/");
 
   const [searchInput, setSearchInput] = useState("");
 
   const dispatch = useDispatch();
-
-  // const getPokemon = async (res) => {
-  //   if (res) {
-  //     console.log(res);
-  //     res.map(async (item) => {
-  //       const result = await axios.get(item.url);
-  //       setPokemonData((state) => {
-  //         state = [...state, result.data];
-  //         state.sort((a, b) => (a.id > b.id ? 1 : -1));
-  //         return state;
-  //       });
-  //     });
-  //   }
-  // };
-  //надо вызвать функцию promise all
-  // const promisesList = urlsList.map(() => код, который делает http-запрос к каждому урлу)
-
-  // const pokeFun = async () => {
-  //   setLoading(true);
-  //   const res = await axios.get(url);
-  //   getPokemon(res.data.results);
-
-  //   setLoading(false);
-  // };
 
   const getPokemon = async (res) => {
     if (res) {

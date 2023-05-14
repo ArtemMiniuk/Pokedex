@@ -1,11 +1,11 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 import { useDispatch, useSelector } from "react-redux";
-import { toggleFavorite } from "./Redux/actions";
+import { toggleFavorite } from "../Redux/actions";
 
 const style = {
   position: "absolute",
@@ -20,7 +20,7 @@ const style = {
   textAlign: "center",
 };
 
-const FavoritePokemonCard = ({ searchInput, selectedTag, pokemon }) => {
+const FavoritePokemonCard = () => {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
@@ -56,13 +56,6 @@ const FavoritePokemonCard = ({ searchInput, selectedTag, pokemon }) => {
     }
   };
 
-  const filterFunctions = {
-    grass: (pokemon) => pokemon.types[0].type.name === "grass",
-    fire: (pokemon) => pokemon.types[0].type.name === "fire",
-    water: (pokemon) => pokemon.types[0].type.name === "water",
-    bug: (pokemon) => pokemon.types[0].type.name === "bug",
-    normal: (pokemon) => pokemon.types[0].type.name === "normal",
-  };
   const favorites = useSelector((state) => state.favorites);
 
   const handleAddFavorite = (item) => {

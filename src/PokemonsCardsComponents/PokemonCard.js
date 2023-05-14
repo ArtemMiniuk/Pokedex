@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 import { useDispatch, useSelector } from "react-redux";
-import { toggleFavorite } from "./Redux/actions";
+import { toggleFavorite } from "../Redux/actions";
 
 const style = {
   position: "absolute",
@@ -83,9 +83,6 @@ const PokemonCard = ({ searchInput, loading, selectedTag, pokemon }) => {
     setFilteredPokemon(filteredData);
   }, [selectedTag, searchInput, pokemon]);
 
-  // const handleAddFavorite = (itemId) => {
-  //   dispatch(toggleFavorite(itemId));
-  // };
   const handleAddFavorite = (item) => {
     dispatch(toggleFavorite(item));
   };

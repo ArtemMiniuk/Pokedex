@@ -6,31 +6,6 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    // case "TOGGLE_FAVORITE":
-    //   const itemId = action.payload;
-    //   const isItemFavorite = state.favorites.includes(itemId);
-    //   if (isItemFavorite) {
-    //     return {
-    //       ...state,
-    //       favorites: state.favorites.filter((id) => id !== itemId),
-    //     };
-    //   } else {
-    //     return {
-    //       ...state,
-    //       favorites: [...state.favorites, itemId],
-    //     };
-    //   }
-    // case "TOGGLE_FAVORITE":
-    //   const { payload } = action;
-    //   const isFavorite = state.favorites.some((item) => item.id === payload.id);
-    //   if (isFavorite) {
-    //     const updatedFavorites = state.favorites.filter(
-    //       (item) => item.id !== payload.id
-    //     );
-    //     return { ...state, favorites: updatedFavorites };
-    //   } else {
-    //     return { ...state, favorites: [...state.favorites, payload] };
-    //   }
     case "TOGGLE_FAVORITE":
       const { payload } = action;
       const isFavorite = state.favorites.some((item) => item.id === payload.id);
